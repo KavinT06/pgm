@@ -1,0 +1,376 @@
+
+============================== PROGRAM 1 ==============================
+C# Program using Late Binding
+-----------------------------------------------------------------------
+using System;
+using System.Reflection;
+
+namespace LateBindingDemo
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Assembly asm = Assembly.LoadFrom("SampleLibrary.dll");
+            Type type = asm.GetType("SampleLibrary.Message");
+            object obj = Activator.CreateInstance(type);
+            MethodInfo method = type.GetMethod("ShowMessage");
+            method.Invoke(obj, new object[] { "Hello from Late Binding!" });
+        }
+    }
+}
+
+============================== PROGRAM 2 ==============================
+Attribute Based Program in C#
+-----------------------------------------------------------------------
+using System;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class InfoAttribute : Attribute
+{
+    public string Developer { get; set; }
+    public InfoAttribute(string dev)
+    {
+        Developer = dev;
+    }
+}
+
+[Info("Elakkiya")]
+public class DemoClass
+{
+    [Info("Balajihariharan")]
+    public void Display()
+    {
+        Console.WriteLine("Attribute Example Executed");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Type t = typeof(DemoClass);
+        foreach (object attr in t.GetCustomAttributes(false))
+        {
+            InfoAttribute a = (InfoAttribute)attr;
+            Console.WriteLine("Class Attribute Developer: " + a.Developer);
+        }
+    }
+}
+
+============================== PROGRAM 3 ==============================
+C# Program Demonstrating Generics with Collection Classes
+-----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<string> names = new List<string>();
+        names.Add("Elakkiya");
+        names.Add("Kavin");
+        names.Add("Ananya");
+
+        foreach (var n in names)
+            Console.WriteLine(n);
+    }
+}
+
+============================== PROGRAM 4 ==============================
+Implementation of Delegates and Multicast Delegates in C#
+-----------------------------------------------------------------------
+using System;
+
+delegate void Greet();
+
+class Program
+{
+    static void SayHello() => Console.WriteLine("Hello!");
+    static void SayWelcome() => Console.WriteLine("Welcome!");
+
+    static void Main()
+    {
+        Greet greet = SayHello;
+        greet += SayWelcome;
+        greet();
+    }
+}
+
+============================== PROGRAM 5 ==============================
+Designing and Accessing Elements Using Indexers in C#
+-----------------------------------------------------------------------
+using System;
+
+class StudentNames
+{
+    private string[] names = new string[3];
+    public string this[int index]
+    {
+        get { return names[index]; }
+        set { names[index] = value; }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        StudentNames s = new StudentNames();
+        s[0] = "Elakkiya";
+        s[1] = "Balajihariharan";
+        s[2] = "Ananya";
+
+        for (int i = 0; i < 3; i++)
+            Console.WriteLine(s[i]);
+    }
+}
+
+============================== PROGRAM 6 ==============================
+LINQ to In-Memory Collections (List, Dictionary)
+-----------------------------------------------------------------------
+using System;
+using System.Linq;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        List<int> numbers = new List<int> { 10, 20, 30, 40, 50 };
+        var result = from n in numbers where n > 25 select n;
+
+        Console.WriteLine("Numbers greater than 25:");
+        foreach (var n in result)
+            Console.WriteLine(n);
+    }
+}
+
+============================== PROGRAM 7 ==============================
+LINQ to XML - Query and Create XML Data
+-----------------------------------------------------------------------
+using System;
+using System.Linq;
+using System.Xml.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        XElement students = new XElement("Students",
+            new XElement("Student", new XAttribute("Id", 1), new XElement("Name", "Elakkiya")),
+            new XElement("Student", new XAttribute("Id", 2), new XElement("Name", "Ananya"))
+        );
+
+        students.Save("students.xml");
+        Console.WriteLine("XML Created:\n" + students);
+
+        var query = from s in students.Elements("Student")
+                    where (int)s.Attribute("Id") == 1
+                    select s.Element("Name").Value;
+
+        Console.WriteLine("\nQuery Result:");
+        foreach (var name in query)
+            Console.WriteLine(name);
+    }
+}
+
+============================== PROGRAM 8 ==============================
+Perform Query Operations on a SQL Database Using LINQ to SQL
+-----------------------------------------------------------------------
+using System;
+using System.Linq;
+using System.Data.Linq;
+using System.Data.Linq.Mapping;
+
+[Table(Name = "Student")]
+public class Student
+{
+    [Column(IsPrimaryKey = true)] public int Id;
+    [Column] public string Name;
+    [Column] public int Marks;
+}
+
+class Program
+{
+    static void Main()
+    {
+        DataContext db = new DataContext(@"Data Source=.;Initial Catalog=SampleDB;Integrated Security=True");
+        Table<Student> students = db.GetTable<Student>();
+
+        var query = from s in students where s.Marks > 80 select s;
+
+        foreach (var s in query)
+            Console.WriteLine($"{s.Id} {s.Name} {s.Marks}");
+    }
+}
+
+============================== PROGRAM 9 ==============================
+C# Program that Uses Lambda Expressions
+-----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
+{
+    static void Main()
+    {
+        List<int> nums = new List<int> { 10, 20, 30, 40 };
+        var even = nums.Where(n => n % 2 == 0);
+
+        Console.WriteLine("Even numbers:");
+        foreach (var n in even)
+            Console.WriteLine(n);
+    }
+}
+
+============================== PROGRAM 10 ==============================
+Program for Creating Web Services using C#
+-----------------------------------------------------------------------
+using System.Web.Services;
+
+[WebService(Namespace = "http://tempuri.org/")]
+public class SampleWebService : WebService
+{
+    [WebMethod]
+    public string HelloWorld(string name)
+    {
+        return "Hello " + name + ", welcome to Web Service!";
+    }
+}
+
+============================== PROGRAM 11 ==============================
+C# Program for Windows Presentation Foundation (WPF)
+-----------------------------------------------------------------------
+<Window x:Class="WpfApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="WPF Demo" Height="200" Width="300">
+    <Grid>
+        <Button Content="Click Me" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Button_Click"/>
+    </Grid>
+</Window>
+
+using System.Windows;
+
+namespace WpfApp
+{
+    public partial class MainWindow : Window
+    {
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Hello, WPF!");
+        }
+    }
+}
+
+============================== PROGRAM 12 ==============================
+C# Program for Windows Workflow Foundation (WF)
+-----------------------------------------------------------------------
+using System;
+using System.Activities;
+
+namespace WorkflowExample
+{
+    class Program
+    {
+        static void Main()
+        {
+            Activity wf = new Sequence
+            {
+                Activities =
+                {
+                    new WriteLine { Text = "Hello, Workflow Foundation!" }
+                }
+            };
+            WorkflowInvoker.Invoke(wf);
+        }
+    }
+}
+
+============================== PROGRAM 13 ==============================
+Program to Perform ADO.NET
+-----------------------------------------------------------------------
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+class Program
+{
+    static void Main()
+    {
+        string connStr = @"Data Source=.;Initial Catalog=SampleDB;Integrated Security=True";
+        using (SqlConnection con = new SqlConnection(connStr))
+        {
+            SqlCommand cmd = new SqlCommand("SELECT * FROM Student", con);
+            con.Open();
+
+            SqlDataReader dr = cmd.ExecuteReader();
+            while (dr.Read())
+            {
+                Console.WriteLine($"{dr[0]} {dr[1]} {dr[2]}");
+            }
+        }
+    }
+}
+
+============================== PROGRAM 14 ==============================
+Design a Web Application in ASP using ADO.NET
+-----------------------------------------------------------------------
+(Default.aspx)
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="WebAppADOExample.Default" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Student Records</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div style="margin:20px;">
+            <h2>Student Records</h2>
+            <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="true"></asp:GridView>
+        </div>
+    </form>
+</body>
+</html>
+
+(Default.aspx.cs)
+using System;
+using System.Data;
+using System.Data.SqlClient;
+
+namespace WebAppADOExample
+{
+    public partial class Default : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                BindGrid();
+            }
+        }
+
+        private void BindGrid()
+        {
+            string connectionString = @"Data Source=.;Initial Catalog=SampleDB;Integrated Security=True";
+            string query = "SELECT * FROM Student";
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                GridView1.DataSource = dt;
+                GridView1.DataBind();
+            }
+        }
+    }
+}
